@@ -1,60 +1,54 @@
 //LOGIC
-let {courses} =require('../data/courses')
-const {validationResult } = require("express-validator");
+const { validationResult } = require("express-validator");
+const Course = require("../models/course.model");
 
-const getAllCourses= (req, res) => {
+const getAllCourses = async (req, res) => {
+  // get all courses from DB using Course Model
+  const courses = await Course.find();
   res.json(courses);
-}
+};
 
-const getSingleCourses= (req, res) => {
-  const courseID = +req.params.courseId;
-  const course = courses.find((courses) => courses.id == courseID);
-  if (!course) {
-    return res.status(404).json({ msg: "course not found" });
+const getSingleCourses = async (req, res) => {
+  try {
+    const course = await Course.findById(req.params.courseId);
+    if (!course) {
+      return res.status(404).json({ msg: "course not found" });
+    }
+    res.json(course);
+  } catch (err) {
+    return res.status(400).json({ msg: "Invalid Object ID" });
   }
-  res.json(course);
-}
+};
 
-
-
-const addCourse=(req, res) => {
+const addCourse = async (req, res) => {
   const err = validationResult(req);
   if (!err.isEmpty()) {
     return res.status(400).json(err.array());
   }
 
-const course={id:courses.length + 1,...req.body};
-courses.push(course)
-  res.status(201).json(course);
-}
+  const newCourse = new Course(req.body);
+  await newCourse.save();
+  res.status(201).json(newCourse);
+};
 
+const updateCourse = async (req, res) => {
 
-const updateCourse=(req,res)=>{
-  const id  = +req.params.couresId
-  let  course = courses.find((courses) => courses.id == id);
-  if (!course) {
-    return res.status(404).json({ msg: "course not found" });
-  }
-  course={...course,...req.body}
-  res.status(200).json(course)
-
+    const course = await Course.updateOne(
+      {id:req.params.couresId},
+      { $set: {...req.body}});
+    return res.status(200).json(course);
 
 }
+ 
+const deleteCourse =async (req, res) => {
+  const result = await Course.deleteOne({id:req.params.couresId})
+    return  res.status(200).json({ success: true,msg:result });
+};
 
-
-const deleteCourse=(req,res)=>{
-  const id  = +req.params.couresId
-  courses=courses.filter((course)=>{course.id!==id})
-  res.status(200).json({success:true})
-}
-
-
-module.exports={
+module.exports = {
   getAllCourses,
   getSingleCourses,
   addCourse,
   updateCourse,
-  deleteCourse
-}
-
-
+  deleteCourse,
+};
