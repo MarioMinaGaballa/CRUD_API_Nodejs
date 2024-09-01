@@ -11,7 +11,7 @@ app.listen(port, () => {
 
 <!--Connected To Database-->
 const url =
-  "mongodb+srv://mariomena199:nodejs@learn-mongodb.yfjlw.mongodb.net/App?retryWrites=true&w=majority&appName=Learn-mongoDb";
+  "mongodb+srv://mariomena199:<Password>@learn-mongodb.yfjlw.mongodb.net/App?retryWrites=true&w=majority&appName=Learn-mongoDb";
 mongoose.connect(url).then(()=>{
   console.log("Connected Successfully To DataBase");
 })
