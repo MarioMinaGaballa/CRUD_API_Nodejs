@@ -1,5 +1,5 @@
 
-<!--create Server -->
+create Server
 const express = require("express");
 const app = express();
 const port = 4000;
@@ -9,7 +9,7 @@ app.listen(port, () => {
 
 
 
-<!--Connected To Database-->
+Connected To Database
 const url =
   "mongodb+srv://mariomena199:<Password>@learn-mongodb.yfjlw.mongodb.net/App?retryWrites=true&w=majority&appName=Learn-mongoDb";
 mongoose.connect(url).then(()=>{
@@ -17,7 +17,7 @@ mongoose.connect(url).then(()=>{
 })
 
 
-<!--Create Schema With Mongoose -->
+-Create Schema With Mongoose 
 const mongoose =require("mongoose")
 const courseSchema=new mongoose.Schema({
 title:{
