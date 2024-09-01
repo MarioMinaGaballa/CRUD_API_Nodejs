@@ -9,7 +9,7 @@ app.listen(port, () => {
 
 
 
-****************Connected To Database***************
+***************Connected To Database***************
 const url =
   "mongodb+srv://mariomena199:<Password>@learn-mongodb.yfjlw.mongodb.net/App?retryWrites=true&w=majority&appName=Learn-mongoDb";
 mongoose.connect(url).then(()=>{
