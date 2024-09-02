@@ -34,14 +34,14 @@ const addCourse = async (req, res) => {
 const updateCourse = async (req, res) => {
 
     const course = await Course.updateOne(
-      {id:req.params.couresId},
+      {_id:req.params.courseId},
       { $set: {...req.body}});
     return res.status(200).json(course);
 
 }
  
 const deleteCourse =async (req, res) => {
-  const result = await Course.deleteOne({id:req.params.couresId})
+  const result = await Course.deleteOne({_id:req.params.courseId})
     return  res.status(200).json({ success: true,msg:result });
 };
 
