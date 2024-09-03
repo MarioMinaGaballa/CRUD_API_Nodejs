@@ -6,8 +6,14 @@ const httpStatusText = require("../utils/http.status.text");
 
 
 const getAllCourses = async (req, res) => {
+  const query = req.query
+const limit = query.limit|| 10;//2
+const page =query.page || 1;//3
+const skip = (page-1)*limit
+
+
   // get all courses from DB using Course Model
-  const courses = await Course.find();
+  const courses = await Course.find({},{"__v":false}).limit(limit).skip(skip);
   res.json({ status: httpStatusText.SUCCESS, data: { courses } });
 };
 
@@ -19,9 +25,12 @@ const getSingleCourses = async (req, res) => {
         .status(404)
         .json({
           status: httpStatusText.FAIL,
-          data: { course: "Course Not Found" },
+          data: { course: "Course Not Found" }
+          
         });
     }
+    // course.find({},{"__v":false})
+    
     res.json({ status: httpStatusText.SUCCESS, data: { course } });
   } catch (err) {
     return res
