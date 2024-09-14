@@ -13,16 +13,18 @@ mongoose.connect(url).then(()=>{
 })
 
 const courseRouter=require('./routes/courses.route')
+const userRouter=require('./routes/users.route')
 
 app.use(cors())
 app.use(express.json());
-app.use('/api/courses',courseRouter)
+app.use('/api/courses',courseRouter) // /api/courses
+app.use('/api/users',userRouter)     // /api/users
 
 
 //global middleware for not found router
-app.use("*",(req,res,next)=>{
-  return res.status(404).json({status:httpStatusText.ERROR,message:"this resourse not avaliable"})
-})
+// app.use("*",(req,res,next)=>{
+//   return res.status(404).json({status:httpStatusText.ERROR,message:"this resourse not avaliable"})
+// })
 //global error handler 
 app.use((error,req,res,next)=>{
   res.status(error.statusCode || 500).json({status:httpStatusText.ERROR|| httpStatusText.ERROR,message:error.message,code:error.statusCode || 500,data:null })
