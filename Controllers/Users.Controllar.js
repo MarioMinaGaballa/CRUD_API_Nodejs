@@ -3,7 +3,7 @@ const httpStatusText = require("../utils/http.status.text");
 const User =require("../models/user.model");
 const appError =require("../utils/appError");
 const bycrpt =require("bcryptjs");
-const jwt =require("jsonwebtoken");
+const genrateToken =require("../utils/genrateJWT");
 
 const getAllUsers =asyncMiddleware( async (req, res) => {
   const query = req.query
@@ -37,9 +37,8 @@ const register =asyncMiddleware(async (req, res,next) => {
     password:hashedPassword,
   });
   //genrate token
-const token = await  jwt.sign({email:newuser.email},process.env.JWT_SECRET_KEY)
-console.log(token);
-return;
+const token =await genrateToken({email:newuser.email,id:newuser._id})
+newuser.token=token
 
 
   await  newuser.save();
@@ -67,7 +66,9 @@ if(!user){
 
  const matcedPassword = await bycrpt.compare(password, user.password)
  if(user&&matcedPassword){
-  return res.status(200).json({ status: httpStatusText.SUCCESS, data: { user:"loged in successfully" } });
+  //logged in successfully
+  const token = await genrateToken({email:user.email,id:user._id})
+  return res.status(200).json({ status: httpStatusText.SUCCESS, data: {token} });
  }else{
   const error=appError.create("Email Or Password is Wrong Please Try Again",400,httpStatusText.FAIL)
   return  next(error)
