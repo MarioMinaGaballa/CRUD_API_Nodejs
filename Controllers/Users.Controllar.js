@@ -6,13 +6,14 @@ const bycrpt =require("bcryptjs");
 const genrateToken =require("../utils/genrateJWT");
 
 const getAllUsers =asyncMiddleware( async (req, res) => {
+
   const query = req.query
 const limit = query.limit|| 10;//2
 const page =query.page || 1;//3
 const skip = (page-1)*limit
   // get all courses from DB using Course Model
   const  users = await  User.find({},{"__v":false,"password":false}).limit(limit).skip(skip);
-  res.json({ status: httpStatusText.s, data: { users } });
+  res.json({ status: httpStatusText.SUCCESS, data: { users } });
 })
 
 
@@ -23,7 +24,7 @@ const register =asyncMiddleware(async (req, res,next) => {
   const olduser= await User.findOne({email})
   if(olduser){
    const error=appError.create("user already exist",400,httpStatusText.FAIL)
-   next(error)  
+    return next(error)  
   }
 
   //password hashing (Security)
