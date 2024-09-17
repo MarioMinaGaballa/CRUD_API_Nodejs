@@ -19,7 +19,7 @@ const skip = (page-1)*limit
 
 
 const register =asyncMiddleware(async (req, res,next) => {
-  const { firstName, lastName, email, password } = req.body;
+  const { firstName, lastName, email, password,role } = req.body;
 
   const olduser= await User.findOne({email})
   if(olduser){
@@ -36,9 +36,10 @@ const register =asyncMiddleware(async (req, res,next) => {
     lastName,
     email,
     password:hashedPassword,
+    role
   });
   //genrate token
-const token =await genrateToken({email:newuser.email,id:newuser._id})
+const token =await genrateToken({email:newuser.email,id:newuser._id,role:newuser.role})
 newuser.token=token
 
 
@@ -68,7 +69,7 @@ if(!user){
  const matcedPassword = await bycrpt.compare(password, user.password)
  if(user&&matcedPassword){
   //logged in successfully
-  const token = await genrateToken({email:user.email,id:user._id})
+  const token = await genrateToken({email:user.email,id:user._id,role:user.role})
   return res.status(200).json({ status: httpStatusText.SUCCESS, data: {token} });
  }else{
   const error=appError.create("Email Or Password is Wrong Please Try Again",400,httpStatusText.FAIL)

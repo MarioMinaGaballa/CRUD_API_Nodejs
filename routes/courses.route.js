@@ -3,12 +3,13 @@ const express =require('express')
 const { body } = require("express-validator");
 const courseController=require("../Controllers/Courses.Controllar")
 const router = express.Router()
-
-
+const verifyToken =require('../middleware/verifyToken');
+const UserRoles = require('../utils/Roles');
+const allowedTo = require('../middleware/allowedTo');
 
 router.route('/')
    .get(courseController.getAllCourses)
-   .post(
+   .post(verifyToken,allowedTo(UserRoles.MANAGER),
       //Validtion >> title
       [
       body("title")
@@ -27,8 +28,8 @@ router.route('/')
 
 router.route("/:courseId")
     .get(courseController.getSingleCourses)
-    .patch(courseController.updateCourse)
-    .delete(courseController.deleteCourse)
+    .patch(verifyToken,allowedTo(UserRoles.ADMIN,UserRoles.MANAGER),courseController.updateCourse)
+    .delete(verifyToken,allowedTo(UserRoles.ADMIN,UserRoles.MANAGER),courseController.deleteCourse)
 
 
 module.exports =router
