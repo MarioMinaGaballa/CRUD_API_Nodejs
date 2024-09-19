@@ -36,7 +36,8 @@ const register =asyncMiddleware(async (req, res,next) => {
     lastName,
     email,
     password:hashedPassword,
-    role
+    role,
+    avatar:req.file.filename
   });
   //genrate token
 const token =await genrateToken({email:newuser.email,id:newuser._id,role:newuser.role})

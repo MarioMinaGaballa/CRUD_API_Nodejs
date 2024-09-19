@@ -3,7 +3,7 @@ const express = require("express");
 const cors=require("cors")
 const app = express();
 const httpStatusText=require('./utils/http.status.text')
-
+const path =require("path") 
 const mongoose =require("mongoose")
 const url =process.env.MONGO_URL
 const port = process.env.PORT
@@ -19,7 +19,7 @@ app.use(cors())
 app.use(express.json());
 app.use('/api/courses',courseRouter) // /api/courses
 app.use('/api/users',userRouter)     // /api/users
-
+app.use('/uploads',express.static(path.join(__dirname,'uploads')))
 
 //global middleware for not found router
 // app.use("*",(req,res,next)=>{
